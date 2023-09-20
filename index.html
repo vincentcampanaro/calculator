@@ -13,6 +13,12 @@
         body, html {
             font-family: 'Open Sans', sans-serif;
             background-color: white;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+
         }
 
         div, div span {
@@ -62,7 +68,7 @@
             padding: 1.2rem 14px;
             border-radius: 0;
             border: none;
-            width: 60%;
+            width: 80%;
             line-height: normal;
             resize: none;
             background: #E9E9E9;
@@ -81,7 +87,7 @@
             padding: 1rem 14px;
             border-radius: 0;
             border: none;
-            width: 60%;
+            width: 80%;
             height: auto;
             line-height: normal;
             resize: none;
@@ -111,8 +117,8 @@
             border-radius: 5px;
             cursor: pointer;
             transition: background-color 0.3s;
-            width: 60%; /* Matching the width of your input fields */
-            margin-top: 1rem; /* Consistent margin with other elements */
+            width: 90%;
+            margin-top: 1rem;
         }
 
         .dropdown-button:hover {
@@ -122,6 +128,42 @@
         .dropdown-button:focus {
             outline: none;
             box-shadow: 0 0 0 3px rgba(23, 34, 46, 0.3);
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center; 
+            margin: 0;
+        }
+
+        .centered-content > div {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        @keyframes swimRocketToggle {
+            0%, 49% {
+                content: "🏊🚀🏊🚀🏊🚀🏊🚀🏊🚀🏊🚀🏊🚀";
+            }
+            50%, 100% {
+                content: "🚀🏊🚀🏊🚀🏊🚀🏊🚀🏊🚀🏊🚀🏊";
+            }
+        }
+
+        .emoji-animated::before, .emoji-animated::after {
+            display: block;
+            text-align: center;
+            animation: swimRocketToggle 1s infinite;
+            white-space: nowrap;
+            overflow: hidden;
+            width: 100%;
+        }
+
+        .emoji-animated::after {
+            content: "";
         }
 
         @media(max-width: 768px) {
@@ -136,103 +178,117 @@
 </head>
 
 <body>
-    <h2>Swim Phase Calculator</h2>
+    <div class="centered-content">
+        <h2>Swim Phase Calculator</h2>
 
-    <!-- Input Form -->
-    <div>
-        <label for="phaseValue">Swim Phase per 100 (seconds):</label>
-        <!-- Updated Input Box Styling -->
-        <input class="form-custom-input" type="number" step="0.01" id="phaseValue" placeholder="e.g. 90" oninput="syncSlider(this.value)">
-        <input class="form-custom-input" type="range" id="phaseSlider" min="30" max="300" step="0.01" oninput="syncInput(this.value)">
-        <select class="dropdown-button" id="phaseUnit">
-            <option value="meter">Meters</option>
-            <option value="yard">Yards</option>
-        </select>
-        <br><br>
+        <!-- Input Form -->
+        <div>
+            <label for="phaseValue">Swim Phase per 100 (seconds):</label>
+            <input class="form-custom-input" type="number" step="0.01" id="phaseValue" placeholder="e.g. 90" oninput="syncSlider(this.value)">
+            <input class="form-custom-input" type="range" id="phaseSlider" min="30" max="300" step="0.01" oninput="syncInput(this.value)">
+            <select class="dropdown-button" id="phaseUnit">
+                <option value="meter">Meters</option>
+                <option value="yard">Yards</option>
+            </select>
+            <br><br>
 
-        <label for="targetDistanceValue">Target Distance:</label>
-        <input class="form-custom-input" type="number" id="targetDistanceValue" placeholder="e.g. 500">
-        <select class="dropdown-button" id="targetDistanceUnit">
-            <option value="meter">Meters</option>
-            <option value="yard">Yards</option>
-        </select>
-        <br><br>
+            <label for="targetDistanceValue">Target Distance:</label>
+            <input class="form-custom-input" type="number" id="targetDistanceValue" placeholder="e.g. 500">
+            <select class="dropdown-button" id="targetDistanceUnit">
+                <option value="meter">Meters</option>
+                <option value="yard">Yards</option>
+            </select>
+            <br><br>
 
-        <button class="btn-custom-comment-form" onclick="calculate()">Calculate</button>
-    </div>
+            <button class="btn-custom-comment-form" onclick="calculate()">Calculate</button>
+        </div>
 
 
-    <!-- Results Display -->
-    <div>
-        <h3>Results:</h3>
-        <p>Time to Complete: <span id="result">-</span></p>
-    </div>
+        <!-- Results Display -->
+        <div>
+            <h3>Results:</h3>
+            <p>Time to Complete: <span id="result">-</span></p>
+            <p id="laneAssignment"></p>
+        </div>
 
-    <!-- Counter Display -->
-    <div>
-        <h3>Usage Counter:</h3>
-        <p>Calculator used: <span id="usageCounter">0</span> times</p>
-    </div>
+        <!-- Counter Display -->
+        <div>
+            <h3>Usage Counter:</h3>
+            <p>Calculator used: <span id="usageCounter">0</span> times</p>
+        </div>
 
-    <script>
-        function syncSlider(value) {
-            document.getElementById('phaseSlider').value = value;
-        }
-
-        function syncInput(value) {
-            document.getElementById('phaseValue').value = value;
-        }
-
-        function calculate() {
-            let phaseValue = parseFloat(document.getElementById('phaseValue').value);
-            let phaseUnit = document.getElementById('phaseUnit').value;
-
-            let targetDistanceValue = parseFloat(document.getElementById('targetDistanceValue').value);
-            let targetDistanceUnit = document.getElementById('targetDistanceUnit').value;
-
-            if (phaseUnit !== targetDistanceUnit) {
-                // Conversion if the phase unit and target distance unit are different
-                if (phaseUnit === 'meter' && targetDistanceUnit === 'yard') {
-                    phaseValue /= 1.09361;
-                } else if (phaseUnit === 'yard' && targetDistanceUnit === 'meter') {
-                    phaseValue *= 1.09361;
-                }
+        <script>
+            function syncSlider(value) {
+                document.getElementById('phaseSlider').value = value;
             }
 
-            let totalSeconds = (targetDistanceValue / 100) * phaseValue;
+            function syncInput(value) {
+                document.getElementById('phaseValue').value = value;
+            }
 
-            let hours = Math.floor(totalSeconds / 3600);
-            let minutes = Math.floor((totalSeconds - (hours * 3600)) / 60);
-            let seconds = totalSeconds - (hours * 3600) - (minutes * 60);
+            function calculate() {
+                let phaseValue = parseFloat(document.getElementById('phaseValue').value);
+                let phaseUnit = document.getElementById('phaseUnit').value;
 
-            let timeString = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toFixed(2).padStart(5, '0')}`;
+                let targetDistanceValue = parseFloat(document.getElementById('targetDistanceValue').value);
+                let targetDistanceUnit = document.getElementById('targetDistanceUnit').value;
 
-            document.getElementById('result').innerText = timeString;
-
-            // Update the counter on the server
-            updateCounterOnServer();
-        }
-
-        function updateCounterOnServer() {
-            fetch('https://script.google.com/macros/s/AKfycbxbZPjHIjLCdYvHCGI0I8ApO6piKQkOHjYe0d-JOfqrcZPHjJTf-Bsy3Ra3DwVeZhBR/exec', {
-                    method: 'POST'
-                })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
+                if (phaseUnit !== targetDistanceUnit) {
+                    // Conversion if the phase unit and target distance unit are different
+                    if (phaseUnit === 'meter' && targetDistanceUnit === 'yard') {
+                        phaseValue /= 1.09361;
+                    } else if (phaseUnit === 'yard' && targetDistanceUnit === 'meter') {
+                        phaseValue *= 1.09361;
                     }
-                    return response.text();
-                })
-                .then(count => {
-                    document.getElementById('usageCounter').innerText = count;
-                })
-                .catch(error => {
-                    console.log('There was a problem with the fetch operation:', error.message);
-                });
-        }
+                }
 
-        // Fetch the count when the page loads
-        updateCounterOnServer();
-    </script>
+                let totalSeconds = (targetDistanceValue / 100) * phaseValue;
+
+                let hours = Math.floor(totalSeconds / 3600);
+                let minutes = Math.floor((totalSeconds - (hours * 3600)) / 60);
+                let seconds = totalSeconds - (hours * 3600) - (minutes * 60);
+
+                let timeString = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toFixed(2).padStart(5, '0')}`;
+
+                document.getElementById('result').innerText = timeString;
+
+                // Lane determination
+                let laneText;
+                if (phaseValue > 150) {
+                    laneText = "🐢 Slow lane! Take your time and enjoy! 🐢";
+                } else if (phaseValue >= 105 && phaseValue <= 150) {
+                    laneText = "🏊 Medium lane! Good pace! 🏊";
+                } else {
+                    laneText = '<div class="emoji-animated"></div>Fast lane! Well done, mate!<div class="emoji-animated"></div>';
+                }
+                document.getElementById('laneAssignment').innerHTML = laneText;
+
+
+                // Update the counter on the server
+                updateCounterOnServer();
+            }
+
+            function updateCounterOnServer() {
+                fetch('https://script.google.com/macros/s/AKfycbxbZPjHIjLCdYvHCGI0I8ApO6piKQkOHjYe0d-JOfqrcZPHjJTf-Bsy3Ra3DwVeZhBR/exec', {
+                        method: 'POST'
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.text();
+                    })
+                    .then(count => {
+                        document.getElementById('usageCounter').innerText = count;
+                    })
+                    .catch(error => {
+                        console.log('There was a problem with the fetch operation:', error.message);
+                    });
+            }
+
+            // Fetch the count when the page loads
+            updateCounterOnServer();
+        </script>
+    </div>
 </body>
 </html>
