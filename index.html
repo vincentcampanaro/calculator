@@ -185,26 +185,23 @@
             cursor: pointer;
         }
 
-        @keyframes swimRocketToggle {
-            0%, 49% {
-                content: "🏊🚀🏊🚀🏊🚀🏊🚀🏊🚀🏊🚀🏊🚀";
-            }
-            50%, 100% {
-                content: "🚀🏊🚀🏊🚀🏊🚀🏊🚀🏊🚀🏊🚀🏊";
-            }
+        .emoji-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            overflow: hidden;
+            height: auto;
+            padding: 5px 0;
         }
 
-        .emoji-animated::before, .emoji-animated::after {
+        .emoji-animated {
             display: block;
             text-align: center;
             animation: swimRocketToggle 1s infinite;
             white-space: nowrap;
             overflow: hidden;
             width: 100%;
-        }
-
-        .emoji-animated::after {
-            content: "";
         }
 
         @media(max-width: 768px) {
@@ -267,6 +264,19 @@
                 document.getElementById('phaseValue').value = value;
             }
 
+            function animateEmoji(elementId, time) {
+                let emojis = ['🏊🚀🏊🚀🏊🚀🏊🚀🏊🚀🏊🚀🏊🚀', '🚀🏊🚀🏊🚀🏊🚀🏊🚀🏊🚀🏊🚀🏊'];
+                let counter = 0;
+                let element = document.getElementById(elementId);
+                element.innerHTML = emojis[counter % emojis.length];
+                counter++;
+
+                setInterval(() => {
+                    element.innerHTML = emojis[counter % emojis.length];
+                    counter++;
+                }, time);
+            }
+
             function calculate() {
                 let phaseValue = parseFloat(document.getElementById('phaseValue').value);
                 let phaseUnit = document.getElementById('phaseUnit').value;
@@ -296,14 +306,18 @@
                 // Lane determination
                 let laneText;
                 if (phaseValue > 150) {
-                    laneText = "🐢 Slow lane! Take your time and enjoy! 🐢";
+                    laneText = "🐢 Slow lane! Keep pushing! 🐢";
                 } else if (phaseValue >= 105 && phaseValue <= 150) {
                     laneText = "🏊 Medium lane! Good pace! 🏊";
                 } else {
-                    laneText = '<div class="emoji-animated"></div>Fast lane! Well done, mate!<div class="emoji-animated"></div>';
+                    laneText = '<div class="emoji-container"><span class="emoji-animated" id="emojiTop"></span></div>Fast lane! Well done, mate!<div class="emoji-container"><span class="emoji-animated" id="emojiBottom"></span></div>';
                 }
                 document.getElementById('laneAssignment').innerHTML = laneText;
 
+                if (phaseValue < 105) {
+                    animateEmoji('emojiTop', 500);
+                    animateEmoji('emojiBottom', 500);
+                }
 
                 // Update the counter on the server
                 updateCounterOnServer();
