@@ -7,56 +7,160 @@
     <title>THEMAGIC5 Swim Phase Calculator</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&display=swap" rel="stylesheet">
 
     <style>
-        body {
+        body, html {
             font-family: 'Open Sans', sans-serif;
-            background-color: #F4F4F4;
+            background-color: white;
         }
 
-        h2,
-        h3 {
+        div, div span {
+            font-size: 18px !important;
+            letter-spacing: 0.1em;
+            font-weight: 500;
+        }
+
+        h2, h3 {
             color: #123456;
         }
 
-        button {
-            background-color: #123456;
-            color: white;
+        h1, h2, h3, h4, h5 {
+            font-family: 'Montserrat';
+            font-style: normal;
+            letter-spacing: 0.1em !important;
+            color: #17222E;
+        }
+
+        h2 {
+            font-family: 'Montserrat';
+            font-style: normal;
+            font-weight: 600;
+            font-size: 28px;
+            letter-spacing: 0.1em;
+        }
+
+        h3, h3 span {
+            font-family: 'Montserrat';
+            font-style: normal;
+            font-weight: 600 !important;
+            font-size: 24px !important;
+            letter-spacing: 0.1em;
+        }
+
+        p, span, div {
+            font-family: 'Montserrat';
+            font-style: normal;
+            font-weight: 500;
+            font-size: 18px;
+            letter-spacing: 0.1em;
+            color: #1c1b1b !important;
+        }
+
+        .form-custom-input {
+            display: block;
+            padding: 1.2rem 14px;
+            border-radius: 0;
             border: none;
-            padding: 10px 15px;
+            width: 60%;
+            line-height: normal;
+            resize: none;
+            background: #E9E9E9;
+            margin-top: 1rem;
+            font-family: 'Montserrat';
+            font-style: normal;
+            font-weight: 600 !important;
+            font-size: 20px !important;
+            letter-spacing: 0.1em;
+            color: #17222E;
+        }
+
+
+        .btn-custom-comment-form {
+            display: block;
+            padding: 1rem 14px;
+            border-radius: 0;
+            border: none;
+            width: 60%;
+            height: auto;
+            line-height: normal;
+            resize: none;
+            background: #17222E;
+            margin-top: 1rem;
+            color: #fff;
+            text-transform: uppercase;
+            font-family: 'Montserrat';
+            font-style: normal;
+            font-weight: 500;
+            font-size: 16px;
+            line-height: 140%; /* or 22px */
+            letter-spacing: 0.1em;
+            color: #FFFFFF;
             cursor: pointer;
+        }
+
+        .dropdown-button {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 18px;
+            font-weight: 500;
+            letter-spacing: 0.1em;
+            color: #1c1b1b;
+            background-color: #E9E9E9;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            width: 60%; /* Matching the width of your input fields */
+            margin-top: 1rem; /* Consistent margin with other elements */
+        }
+
+        .dropdown-button:hover {
+            background-color: #D6D6D6;
+        }
+
+        .dropdown-button:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(23, 34, 46, 0.3);
+        }
+
+        @media(max-width: 768px) {
+            .form-custom-input,
+            .btn-custom-comment-form,
+            .dropdown-button {
+                width: 100%;
+                font-size: 14px;
+            }
         }
     </style>
 </head>
 
 <body>
-
-    <img src="https://d1011j0lbv5k1u.cloudfront.net/assets/store-506970/506970-logo-1579722901.png" alt="TheMagic5 Logo"
-        width="200">
-
     <h2>Swim Phase Calculator</h2>
 
     <!-- Input Form -->
     <div>
         <label for="phaseValue">Swim Phase per 100 (seconds):</label>
-        <input type="number" step="0.01" id="phaseValue" placeholder="e.g. 90" oninput="syncSlider(this.value)">
-        <input type="range" id="phaseSlider" min="30" max="300" step="0.01" oninput="syncInput(this.value)">
-        <select id="phaseUnit">
+        <!-- Updated Input Box Styling -->
+        <input class="form-custom-input" type="number" step="0.01" id="phaseValue" placeholder="e.g. 90" oninput="syncSlider(this.value)">
+        <input class="form-custom-input" type="range" id="phaseSlider" min="30" max="300" step="0.01" oninput="syncInput(this.value)">
+        <select class="dropdown-button" id="phaseUnit">
             <option value="meter">Meters</option>
             <option value="yard">Yards</option>
         </select>
         <br><br>
 
         <label for="targetDistanceValue">Target Distance:</label>
-        <input type="number" id="targetDistanceValue" placeholder="e.g. 500">
-        <select id="targetDistanceUnit">
+        <input class="form-custom-input" type="number" id="targetDistanceValue" placeholder="e.g. 500">
+        <select class="dropdown-button" id="targetDistanceUnit">
             <option value="meter">Meters</option>
             <option value="yard">Yards</option>
         </select>
         <br><br>
 
-        <button onclick="calculate()">Calculate</button>
+        <button class="btn-custom-comment-form" onclick="calculate()">Calculate</button>
     </div>
+
 
     <!-- Results Display -->
     <div>
@@ -131,5 +235,4 @@
         updateCounterOnServer();
     </script>
 </body>
-
 </html>
