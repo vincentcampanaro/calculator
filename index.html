@@ -144,7 +144,7 @@
             align-items: center;
         }
 
-                .form-custom-input[type="range"] {
+        .form-custom-input[type="range"] {
             appearance: none;
             width: 80%;
             height: 12px;
@@ -323,6 +323,10 @@
                 updateCounterOnServer();
             }
 
+            function formatNumber(num) {
+                return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            }
+
             function updateCounterOnServer() {
                 fetch('https://script.google.com/macros/s/AKfycbxbZPjHIjLCdYvHCGI0I8ApO6piKQkOHjYe0d-JOfqrcZPHjJTf-Bsy3Ra3DwVeZhBR/exec', {
                         method: 'POST'
@@ -334,7 +338,7 @@
                         return response.text();
                     })
                     .then(count => {
-                        document.getElementById('usageCounter').innerText = count;
+                        document.getElementById('usageCounter').innerText = formatNumber(count);
                     })
                     .catch(error => {
                         console.log('There was a problem with the fetch operation:', error.message);
